@@ -1,6 +1,9 @@
 import mongoose from "mongoose"
+import dotenv from "dotenv";
 
-var mongoURL = 'mongodb+srv://shoaib:shoaibjamil43@cluster0.gxfrpaw.mongodb.net/SocialBird-MERN'
+dotenv.config();
+
+var mongoURL = process.env.MONGO_URL
 
 mongoose.connect(mongoURL, { useUnifiedTopology: true, useNewUrlParser: true })
 

@@ -1,6 +1,8 @@
 import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "./db.js"
+import dotenv from "dotenv";
+
 
 // Routes
 const app = express();
@@ -8,6 +10,8 @@ const app = express();
 // Middleware
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+
+dotenv.config();
 
 
 const port = process.env.PORT || 5000;
