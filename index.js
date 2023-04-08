@@ -2,6 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "./db.js"
 import dotenv from "dotenv";
+import AuthRoute from "./Routes/AuthRoute.js"
 
 
 // Routes
