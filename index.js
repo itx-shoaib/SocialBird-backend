@@ -14,6 +14,9 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
 dotenv.config();
 
+// usage of routes
+app.use('/api/auth', AuthRoute)
+
 
 const port = process.env.PORT || 5000;
 
