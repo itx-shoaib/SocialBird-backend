@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import mongoose from "./db.js"
 import dotenv from "dotenv";
 import AuthRoute from "./Routes/AuthRoute.js"
+import UserRoute from "./Routes/userRoute.js"
 
 
 // Routes
@@ -16,6 +17,7 @@ dotenv.config();
 
 // usage of routes
 app.use('/api/auth', AuthRoute)
+app.use('/api/user', UserRoute)
 
 
 const port = process.env.PORT || 5000;

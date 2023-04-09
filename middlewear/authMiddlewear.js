@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken"
 import userModal from "../Models/userModel.js";
 
-export const authMiddleware = async (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
     try {
         const token = req.cookies.token;
 
@@ -10,17 +10,21 @@ export const authMiddleware = async (req, res, next) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
         const user = await userModal.findById(decoded.id);
 
         if (!user) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
 
-        req.user = { id: decoded.id };
+        // add user ID to req object
+        req.userId = userId;
         next();
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: error.message });
     }
 };
+
+export default authMiddleware
 
