@@ -1,10 +1,10 @@
-import UserModel from "../Models/userModel.js";
+import userModal from "../Models/userModel.js";
 import bcrypt from "bcrypt";
 
 export const getUser = async (req, res) => {
     const userId = req.userId;
     try {
-        const user = await UserModel.findById(userId);
+        const user = await userModal.findById(userId);
 
         if (user) {
             // from user extracting password and otherDetails
@@ -15,6 +15,42 @@ export const getUser = async (req, res) => {
             res.status(404).json("No such user exists");
         }
     } catch (error) {
-        res.status(500).json(error);
+        // Handle errors
+        console.error(error)
+        res.status(500).json({ error: error.message })
+    }
+}
+
+export const updateUser = async (req, res) => {
+    const id = req.userId;
+    try {
+        const { currentUserId, currentUserAdminStatus, password } = req.body;
+        if (id === currentUserId || currentUserAdminStatus) {
+            try {
+                // Password must be store in hashing
+                if (password) {
+                    const salt = await bcrypt.genSalt(10);
+                    req.body.password = await bcrypt.hash(password, salt);
+                }
+                // Updating rest of the user
+                const user = await userModal.findByIdAndUpdate(id, req.body, { new: true })
+                res.status(200).json({
+                    data: user
+                })
+            } catch (error) {
+                // Handle errors
+                console.error(error)
+                res.status(500).json({ error: error.message })
+            }
+
+        }
+        else {
+            res.status(403).json("Access Denied! you can only update your own profile");
+        }
+
+    } catch (error) {
+        // Handle errors
+        console.error(error)
+        res.status(500).json({ error: error.message })
     }
 }
