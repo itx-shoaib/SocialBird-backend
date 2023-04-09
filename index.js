@@ -4,6 +4,7 @@ import mongoose from "./db.js"
 import dotenv from "dotenv";
 import AuthRoute from "./Routes/AuthRoute.js"
 import UserRoute from "./Routes/userRoute.js"
+import PostRoute from "./Routes/PostRoute.js"
 
 
 // Routes
@@ -18,6 +19,7 @@ dotenv.config();
 // usage of routes
 app.use('/api/auth', AuthRoute)
 app.use('/api/user', UserRoute)
+app.use('/api/post', PostRoute)
 
 
 const port = process.env.PORT || 5000;
