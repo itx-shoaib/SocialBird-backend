@@ -1,0 +1,26 @@
+import jwt from "jsonwebtoken"
+import userModal from "../Models/userModel.js";
+
+export const authMiddleware = async (req, res, next) => {
+    try {
+        const token = req.cookies.token;
+
+        if (!token) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await userModal.findById(decoded.id);
+
+        if (!user) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+
+        req.user = { id: decoded.id };
+        next();
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
