@@ -48,3 +48,34 @@ export const getPost = async (req, res) => {
         res.status(500).json({ error: error.message })
     }
 };
+
+export const updatePost = async (req, res) => {
+    try {
+        // Getting userId from authMiddlewear
+        const userId = req.userId
+        const { postId, desc, image } = req.body
+
+        // Validate the user input
+        if (!postId || !desc || !image) {
+            return res.status(400).json({ error: "Please provide valid inputs" })
+        }
+
+        // Getting the post
+        const post = await postModel.findById(postId)
+        if (!post) {
+            return res.status(400).json({ error: "Post is not available" })
+        }
+
+        // Updating the post
+        if (post.userId === userId) {
+            await post.updateOne({ $set: { desc: desc, image: image } });
+            res.status(200).json("Post Updated");
+        } else {
+            res.status(403).json("Action forbidden");
+        }
+    } catch (error) {
+        // Handle errors
+        console.error(error)
+        res.status(500).json({ error: error.message })
+    }
+}
