@@ -1,6 +1,7 @@
 import express from "express"; //import express
 import authMiddleware from "../middlewear/authMiddlewear.js"
 import { createPost, getPost, updatePost } from "../Controllers/PostControllers.js";
+import { deleteUser } from "../Controllers/userController.js";
 
 
 // 1.
@@ -10,6 +11,7 @@ const router = express.Router();
 router.post("/createPost", authMiddleware, createPost)
 router.get("/getPost/:id", getPost)
 router.put("/updatePost", authMiddleware, updatePost)
+router.delete("/deleteUser", authMiddleware, deleteUser)
 
 // 3. 
 export default router; // export to use in index.js

@@ -79,3 +79,34 @@ export const updatePost = async (req, res) => {
         res.status(500).json({ error: error.message })
     }
 }
+
+export const deletePost = async (req, res) => {
+    try {
+        // Getting userId from authMiddlewear
+        const userId = req.userId
+        const { postId } = req.body
+
+        // Validate the user input
+        if (!postId) {
+            return res.status(400).json({ error: "Please provide valid inputs" })
+        }
+
+        // Getting the post
+        const post = await postModel.findById(postId)
+        if (!post) {
+            return res.status(400).json({ error: "Post is not available" })
+        }
+
+        // Updating the post
+        if (post.userId === userId) {
+            await post.deleteOne();
+            res.status(200).json({ messgae: "Post Deleted" });
+        } else {
+            res.status(403).json({ message: "Action forbidden" });
+        }
+    } catch (error) {
+        // Handle errors
+        console.error(error)
+        res.status(500).json({ error: error.message })
+    }
+}
