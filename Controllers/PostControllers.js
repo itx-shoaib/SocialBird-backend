@@ -25,3 +25,26 @@ export const createPost = async (req, res) => {
         res.status(500).json({ error: error.message })
     }
 }
+
+
+export const getPost = async (req, res) => {
+    try {
+        // Params from API URL
+        const id = req.params.id;
+
+        // Validate user input
+        if (!id) {
+            return res.status(400).json({ error: "Please provide valid id" })
+        }
+
+        // Getting the post
+        const post = await postModel.findById(id);
+
+        // Sending the post
+        res.status(200).json({ data: post });
+    } catch (error) {
+        // Handle errors
+        console.error(error)
+        res.status(500).json({ error: error.message })
+    }
+};
