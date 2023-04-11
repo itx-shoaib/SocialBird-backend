@@ -14,5 +14,6 @@ router.put("/updatePost", authMiddleware, updatePost)
 router.delete("/deleteUser", authMiddleware, deleteUser)
 router.put("/likeDislikePost", authMiddleware, likeDislikePost)
 
+
 // 3. 
 export default router; // export to use in index.js
