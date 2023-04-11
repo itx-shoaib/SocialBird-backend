@@ -110,3 +110,29 @@ export const deletePost = async (req, res) => {
         res.status(500).json({ error: error.message })
     }
 }
+
+// For Both Like and dislike posts
+export const likeDislikePost = async (req, res) => {
+    const { postId } = req.body;
+    const userId = req.userId;
+
+    try {
+        // Validate the user inputs 
+        if (!postId) {
+            return res.status(400).json({ error: "Please provide valid inputs" })
+        }
+
+        const post = await postModel.findById(postId);
+        if (!post.likes.includes(userId)) {
+            await post.updateOne({ $push: { likes: userId } });
+            res.status(200).json({ message: "Post liked" });
+        } else {
+            await post.updateOne({ $pull: { likes: userId } });
+            res.status(200).json({ message: "Post Unliked" });
+        }
+    } catch (error) {
+        // Handle errors
+        console.error(error)
+        res.status(500).json({ error: error.message })
+    }
+};
