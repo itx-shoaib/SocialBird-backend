@@ -36,15 +36,15 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { email, password } = req.body;
 
         // Validate user input
-        if (!username || !password) {
-            return res.status(400).json({ error: "Please provide username and password" });
+        if (!email || !password) {
+            return res.status(400).json({ error: "Please provide email and password" });
         }
 
         // Check if user exists
-        const user = await userModal.findOne({ username });
+        const user = await userModal.findOne({ email });
         if (!user) {
             return res.status(404).json({ error: "User not found" });
         }
@@ -56,18 +56,18 @@ export const loginUser = async (req, res) => {
         }
 
         // Generate JWT token
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+        // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
         // Set the token as a cookie
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "none",
-            maxAge: 24 * 60 * 60 * 1000, // 1 day
-        });
+        // res.cookie("token", token, {
+        //     httpOnly: true,
+        //     secure: true,
+        //     sameSite: "none",
+        //     maxAge: 24 * 60 * 60 * 1000, // 1 day
+        // });
 
         // Return success response with JWT token
-        res.status(200).json({ message: "Login successful" });
+        res.status(200).json({ data: user });
     } catch (error) {
         // Handle errors
         console.error(error);
