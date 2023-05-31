@@ -4,10 +4,10 @@ import jwt from "jsonwebtoken"
 
 export const registerUser = async (req, res) => {
     try {
-        const { username, password, firstname, lastname, email } = req.body
+        const { password, firstname, lastname, email } = req.body
 
         // Validate user input
-        if (!username || !password || !firstname || !lastname || !email) {
+        if (!password || !firstname || !lastname || !email) {
             return res.status(400).json({ error: "Please provide all required fields" })
         }
 
@@ -22,7 +22,7 @@ export const registerUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, saltRounds)
 
         // Create new user
-        const newUser = new userModal({ username, password: hashedPassword, firstname, lastname, email })
+        const newUser = new userModal({  password: hashedPassword, firstname, lastname, email })
         await newUser.save()
 
         // Return success response with JWT token
