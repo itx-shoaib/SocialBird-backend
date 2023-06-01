@@ -19,7 +19,7 @@ export const registerUser = async (req, res) => {
 
         // Hash password
         const saltRounds = 10
-        const hashedPassword = await bcrypt.hash(password, saltRounds)
+        const hashedPassword = await bcrypt.hash(req.body.password, saltRounds)
         req.body.password = hashedPassword
 
         // Create new user
