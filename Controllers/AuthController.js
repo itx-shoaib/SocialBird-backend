@@ -20,9 +20,10 @@ export const registerUser = async (req, res) => {
         // Hash password
         const saltRounds = 10
         const hashedPassword = await bcrypt.hash(password, saltRounds)
+        req.body.password = hashedPassword
 
         // Create new user
-        const newUser = new userModal({  password: hashedPassword, firstname, lastname, email })
+        const newUser = new userModal(req.body)
         await newUser.save()
 
         // Return success response with JWT token
