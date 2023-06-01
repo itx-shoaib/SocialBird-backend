@@ -19,15 +19,20 @@ export const registerUser = async (req, res) => {
 
         // Hash password
         const saltRounds = 10
-        const hashedPassword = await bcrypt.hash(req.body.password, saltRounds)
-        req.body.password = hashedPassword
+        const hashedPassword = await bcrypt.hash(password, saltRounds)
 
         // Create new user
-        const newUser = new userModal(req.body)
-        await newUser.save()
+        const newUser = new userModal({  password: hashedPassword, firstname, lastname, email })
+        const user = await newUser.save()
+
+        // Generate the Token
+        const token = jwt.sign({
+            email:user.email,
+            id:user._id
+        },process.env.JWT_SECRET,{expiresIn:'1h'})
 
         // Return success response with JWT token
-        res.status(200).json({ data: newUser })
+        res.status(200).json({ user,token })
     } catch (error) {
         // Handle errors
         console.error(error)
@@ -57,18 +62,10 @@ export const loginUser = async (req, res) => {
         }
 
         // Generate JWT token
-        // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-
-        // Set the token as a cookie
-        // res.cookie("token", token, {
-        //     httpOnly: true,
-        //     secure: true,
-        //     sameSite: "none",
-        //     maxAge: 24 * 60 * 60 * 1000, // 1 day
-        // });
+        const token = jwt.sign({ email:user.email,id: user._id }, process.env.JWT_SECRET,{expiresIn:'1h'});
 
         // Return success response with JWT token
-        res.status(200).json({ data: user });
+        res.status(200).json({ user,token });
     } catch (error) {
         // Handle errors
         console.error(error);
