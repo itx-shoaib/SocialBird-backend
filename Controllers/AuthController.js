@@ -4,10 +4,10 @@ import jwt from "jsonwebtoken"
 
 export const registerUser = async (req, res) => {
     try {
-        const { username, password, firstname, lastname, email } = req.body
+        const { password, firstname, lastname, email } = req.body
 
         // Validate user input
-        if (!username || !password || !firstname || !lastname || !email) {
+        if (!password || !firstname || !lastname || !email) {
             return res.status(400).json({ error: "Please provide all required fields" })
         }
 
@@ -19,10 +19,11 @@ export const registerUser = async (req, res) => {
 
         // Hash password
         const saltRounds = 10
-        const hashedPassword = await bcrypt.hash(password, saltRounds)
+        const hashedPassword = await bcrypt.hash(req.body.password, saltRounds)
+        req.body.password = hashedPassword
 
         // Create new user
-        const newUser = new userModal({ username, password: hashedPassword, firstname, lastname, email })
+        const newUser = new userModal(req.body)
         await newUser.save()
 
         // Return success response with JWT token
@@ -36,15 +37,15 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { email, password } = req.body;
 
         // Validate user input
-        if (!username || !password) {
-            return res.status(400).json({ error: "Please provide username and password" });
+        if (!email || !password) {
+            return res.status(400).json({ error: "Please provide email and password" });
         }
 
         // Check if user exists
-        const user = await userModal.findOne({ username });
+        const user = await userModal.findOne({ email });
         if (!user) {
             return res.status(404).json({ error: "User not found" });
         }
@@ -56,18 +57,18 @@ export const loginUser = async (req, res) => {
         }
 
         // Generate JWT token
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+        // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
         // Set the token as a cookie
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "none",
-            maxAge: 24 * 60 * 60 * 1000, // 1 day
-        });
+        // res.cookie("token", token, {
+        //     httpOnly: true,
+        //     secure: true,
+        //     sameSite: "none",
+        //     maxAge: 24 * 60 * 60 * 1000, // 1 day
+        // });
 
         // Return success response with JWT token
-        res.status(200).json({ message: "Login successful" });
+        res.status(200).json({ data: user });
     } catch (error) {
         // Handle errors
         console.error(error);
