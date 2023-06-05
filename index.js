@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import AuthRoute from "./Routes/AuthRoute.js"
 import UserRoute from "./Routes/userRoute.js"
 import PostRoute from "./Routes/PostRoute.js"
+import UploadRoute from "./Routes/UploadRoute.js"
 import cors from "cors"
 
 
@@ -21,6 +22,7 @@ dotenv.config();
 app.use('/api/auth', AuthRoute)
 app.use('/api/user', UserRoute)
 app.use('/api/post', PostRoute)
+app.use('/api/upload', UploadRoute)
 
 
 const port = process.env.PORT || 5000;
