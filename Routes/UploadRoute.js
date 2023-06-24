@@ -1,4 +1,5 @@
 import express from "express";
+import { v4 as uuidv4 } from 'uuid';
 const router = express.Router();
 import multer from "multer";
 
@@ -7,8 +8,8 @@ const storage = multer.diskStorage({
       cb(null, "public/images");
     },
     filename: (req, file, cb) => {
-      console.log(req.body.name)
-      cb(null, req.body.name);
+      const uniqueFilename = `${uuidv4()}-${file.originalname}`;
+      cb(null, uniqueFilename);
     },
   });
 const upload = multer({ storage: storage });
