@@ -13,7 +13,7 @@ export const createPost = async (req, res) => {
         }
 
         // Creating new post
-        const newPost = new postModel.create(req.body)
+        const newPost = new postModel(req.body)
         await newPost.save()
 
         // Sending the response
