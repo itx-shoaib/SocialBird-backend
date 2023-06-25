@@ -4,17 +4,16 @@ import userModal from "../Models/userModel.js";
 
 export const createPost = async (req, res) => {
     try {
-        // userId is coming from token
-        const userId = req.userId
-        const { desc, image } = req.body
+        // destructuring req.body
+        const { desc, image,userId } = req.body
 
         // Validate user input
-        if (!desc || !image) {
+        if (!desc || !image || !userId) {
             return res.status(400).json({ error: "Please provide all required fields" })
         }
 
         // Creating new post
-        const newPost = new postModel.create({ userId: userId, desc: desc, image: image })
+        const newPost = new postModel.create(req.body)
         await newPost.save()
 
         // Sending the response
