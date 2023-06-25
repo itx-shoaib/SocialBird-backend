@@ -8,7 +8,7 @@ import { deleteUser } from "../Controllers/userController.js";
 const router = express.Router();
 
 // 2.
-router.post("/createPost", authMiddleware, createPost)
+router.post("/createPost", createPost)
 router.get("/getPost/:id", getPost)
 router.put("/updatePost", authMiddleware, updatePost)
 router.delete("/deleteUser", authMiddleware, deleteUser)
